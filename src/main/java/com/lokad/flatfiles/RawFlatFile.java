@@ -536,7 +536,7 @@ public final class RawFlatFile
 	*/
 	public byte[] getItem(int line, int column)
 	{
-		return Content.get(_cells.get(line * Columns + column));
+		return Content.get(_cells.getInt(line * Columns + column));
 	}
 
 	/** 

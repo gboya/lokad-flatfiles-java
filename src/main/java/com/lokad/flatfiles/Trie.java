@@ -145,19 +145,19 @@ public final class Trie
 				int hashSize = HashSizeAtLength(iPos - iStart);
 
 				int childR = nodeI + Children + (iByte % hashSize);
-				int childI = _nodes.get(childR);
+				int childI = _nodes.getInt(childR);
 
 				// Traverse the list of siblings looking for the one with the right
 				// initial byte.
 				while (childI != 0)
 				{
-					bFirstBytes = _nodes.get(childI + First);
+					bFirstBytes = _nodes.getInt(childI + First);
 					if (bFirstBytes % 256 == iByte)
 					{
 						break;
 					}
 					childR = childI + NextSibling;
-					childI = _nodes.get(childR);
+					childI = _nodes.getInt(childR);
 				}
 
 				// This node does not have a child starting with the next byte: 
@@ -169,8 +169,8 @@ public final class Trie
 
 				nodeI = childI;
 				nodeR = childR;
-				bStart = _nodes.get(nodeI + Start);
-				bEnd = _nodes.get(nodeI + End);
+				bStart = _nodes.getInt(nodeI + Start);
+				bEnd = _nodes.getInt(nodeI + End);
 
 				// The sibling search has already ensured that the first byte of 
 				// the buffer matches: continue search from next position.
@@ -192,7 +192,7 @@ public final class Trie
 			{
 				if (bOffset == 4)
 				{
-					bBytes = Values.get(_nodes.get(nodeI + Buffer));
+					bBytes = Values.get(_nodes.getInt(nodeI + Buffer));
 				}
 
 				// ReSharper disable once PossibleNullReferenceException
@@ -222,7 +222,7 @@ public final class Trie
 			return AddNewEnd(nodeI, nodeR, iBytes, iStart, iEnd, bPos);
 		}
 
-		int reference = _nodes.get(nodeI + Reference);
+		int reference = _nodes.getInt(nodeI + Reference);
 
 		if (reference == 0)
 		{
@@ -256,7 +256,7 @@ public final class Trie
 	*/
 	private int AddNewNode(int nodeI, int nodeR, byte[] iBytes, int iStart, int iEnd, int iPos, int bPos)
 	{
-		int bBytesI = _nodes.get(nodeI + Buffer);
+		int bBytesI = _nodes.getInt(nodeI + Buffer);
 		byte[] bBytes = Values.get(bBytesI);
 
 		// Create the middle node
@@ -266,12 +266,12 @@ public final class Trie
 		int midLength = iPos - iStart;
 		int midHashSize = HashSizeAtLength(midLength);
 
-		_nodes.add(_nodes.get(nodeI + First)); // First
+		_nodes.add(_nodes.getInt(nodeI + First)); // First
 		_nodes.add(bBytesI); // Buffer
-		_nodes.add(_nodes.get(nodeI + Start)); // Start
+		_nodes.add(_nodes.getInt(nodeI + Start)); // Start
 		_nodes.add(bPos); // End
 		_nodes.add(0); // Reference
-		_nodes.add(_nodes.get(nodeI + NextSibling)); // NextSibling
+		_nodes.add(_nodes.getInt(nodeI + NextSibling)); // NextSibling
 
 		for (int u = 0; u < midHashSize; ++u)
 		{
@@ -310,7 +310,7 @@ public final class Trie
 		int length = iEnd - iStart;
 		int midHashSize = HashSizeAtLength(length);
 
-		int bBytesI = _nodes.get(nodeI + Buffer);
+		int bBytesI = _nodes.getInt(nodeI + Buffer);
 		byte[] bBytes = Values.get(bBytesI);
 
 		// Create the middle node
@@ -318,12 +318,12 @@ public final class Trie
 
 		int midI = _nodes.size();
 
-		_nodes.add(_nodes.get(nodeI + First)); // First
+		_nodes.add(_nodes.getInt(nodeI + First)); // First
 		_nodes.add(bBytesI); // Buffer
-		_nodes.add(_nodes.get(nodeI + Start)); // Start
+		_nodes.add(_nodes.getInt(nodeI + Start)); // Start
 		_nodes.add(bPos); // End
 		_nodes.add(reference); // Reference
-		_nodes.add(_nodes.get(nodeI + NextSibling)); // NextSibling
+		_nodes.add(_nodes.getInt(nodeI + NextSibling)); // NextSibling
 
 		for (int u = 0; u < midHashSize; ++u) // Children
 		{
@@ -368,7 +368,7 @@ public final class Trie
 		_nodes.add(iPos - iStart); // Start
 		_nodes.add(iEnd - iStart); // End
 		_nodes.add(reference); // Reference
-		_nodes.add(_nodes.get(childR)); // NextSibling
+		_nodes.add(_nodes.getInt(childR)); // NextSibling
 
 		for (int u = 0; u < hashSize; ++u) // Children
 		{
