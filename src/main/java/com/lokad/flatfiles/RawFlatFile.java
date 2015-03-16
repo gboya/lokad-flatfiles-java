@@ -1,5 +1,7 @@
 package com.lokad.flatfiles;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public final class RawFlatFile
 	/** <see cref="Cells"/>
 	  Only mutable during parsing. 
 	*/
-	private List<Integer> _cells = new ArrayList<Integer>();
+	private IntArrayList _cells = new IntArrayList();
 
 	/** 
 	 A list of non-empty cells that were beyond the last column on a line.
@@ -159,7 +161,7 @@ public final class RawFlatFile
 	public RawFlatFile(int columns, java.util.ArrayList<Integer> cells, List<byte[]> content)
 	{
 		Columns = columns;
-		_cells = cells;
+		_cells = new IntArrayList(cells);
 		Content = content;
 
 		// Use default values for diagnosis fields

@@ -1,5 +1,7 @@
 package com.lokad.flatfiles;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +65,7 @@ public final class Trie
 	private static final int NextSibling = 5;
 	private static final int Children = 6;
 
-	private final List<Integer> _nodes = new ArrayList<Integer>();
+	private final IntArrayList _nodes = new IntArrayList();
 
 	/** 
 	 Individual values indexed by their unique identifier, as generated
