@@ -1,5 +1,7 @@
 package com.lokad.flatfiles;
 
+import it.unimi.dsi.fastutil.ints.IntListIterator;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,9 +34,9 @@ public final class RawFlatFileSerialization
 		writer.write(uInt32(rff.Content.size()));
 		
 		// Cell data: integer references to indices in 'content'
-		for (int cell : rff.getCells())
-		{
-			WriteInt(writer, cell);
+		IntListIterator iterator = rff.getCells().iterator();
+		while(iterator.hasNext()) {
+			WriteInt(writer, iterator.nextInt());
 		}
 		
 		

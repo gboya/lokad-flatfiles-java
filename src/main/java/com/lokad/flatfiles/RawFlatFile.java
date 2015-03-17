@@ -1,7 +1,8 @@
 package com.lokad.flatfiles;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntLists;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -23,9 +24,9 @@ public final class RawFlatFile
 	 A matrix of cells. Line X, column Y can be found at index (X * Columns + Y).
 	 The actual contents of a cell are found in <see cref="Content"/>.
 	*/
-	public List<Integer> getCells()
+	public IntList getCells()
 	{
-		return Collections.unmodifiableList(_cells);
+		return IntLists.unmodifiable(_cells);
 	}
 
 	/** <see cref="Cells"/>
