@@ -3,28 +3,36 @@
   <groupId>lokad-flatfiles</groupId>
   <artifactId>lokad-flatfiles-j</artifactId>
   <version>0.1-SNAPSHOT</version>
-  
+
   <build>
-	<plugins>
-	  <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-jar-plugin</artifactId>
-		<configuration>
-		  <archive>
-			<manifest>
-			  <addClasspath>true</addClasspath>
-			  <mainClass>com.lokad.flatfiles.Program</mainClass>
-			</manifest>
-		  </archive>
-		</configuration>
-	  </plugin>
-	</plugins>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.lokad.flatfiles.Program</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
   <dependencies>
-  	<dependency>
-    <groupId>it.unimi.dsi</groupId>
-    <artifactId>fastutil</artifactId>
-    <version>6.6.4</version>
-  	</dependency>
+    <dependency>
+      <groupId>it.unimi.dsi</groupId>
+      <artifactId>fastutil</artifactId>
+      <version>6.6.4</version>
+    </dependency>
   </dependencies>
 </project>
