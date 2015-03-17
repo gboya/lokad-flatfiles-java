@@ -51,7 +51,8 @@ public class FlatFileTest {
 	{
 		return Arrays.asList(new Object[][] {
 				{"/Lokad_Items.tsv", "/Lokad_Items.rff"},
-				{"/Lokad_Orders.tsv", "/Lokad_Orders.rff"}
+				{"/Lokad_Orders.tsv", "/Lokad_Orders.rff"},
+				{"/Lokad_Items_UTF8_quotes.tsv", "/Lokad_Items_UTF8_quotes.rff"}
 		});
 	}
 
