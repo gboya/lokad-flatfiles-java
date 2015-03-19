@@ -2,6 +2,8 @@ package com.lokad.flatfiles;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
+import com.google.common.primitives.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,7 +140,7 @@ public final class Trie
 
 		for (int iPos = iStart; iPos < iEnd; ++iPos)
 		{
-			byte iByte = iBytes[iPos];
+			int iByte = UnsignedBytes.toInt(iBytes[iPos]);
 
 			if (bPos == bEnd)
 			{
@@ -197,7 +199,7 @@ public final class Trie
 
 				// ReSharper disable once PossibleNullReferenceException
 				//   bBytes will be initialized at offset = 4 and is not used before
-				bByte = bBytes[bPos];
+				bByte = UnsignedBytes.toInt(bBytes[bPos]);
 			}
 
 			// Continue reading through the buffer while we match
@@ -278,7 +280,7 @@ public final class Trie
 			_nodes.add(0); // Children
 		}
 
-		_nodes.set(midI + Children + (bBytes[bPos] % midHashSize), nodeI);
+		_nodes.set(midI + Children + (UnsignedBytes.toInt(bBytes[bPos]) % midHashSize), nodeI);
 
 		// Replace the old node with the middle node
 		// =========================================
@@ -295,7 +297,7 @@ public final class Trie
 		// Insert the new child
 		// ====================
 
-		int childR = midI + Children + (iBytes[iPos] % midHashSize);
+		int childR = midI + Children + (UnsignedBytes.toInt(iBytes[iPos]) % midHashSize);
 
 		return AddNewChild(childR, iBytes, iStart, iEnd, iPos);
 	}
@@ -330,7 +332,7 @@ public final class Trie
 			_nodes.add(0);
 		}
 
-		_nodes.set(midI + Children + bBytes[bPos] % midHashSize, nodeI);
+		_nodes.set(midI + Children + UnsignedBytes.toInt(bBytes[bPos]) % midHashSize, nodeI);
 
 		// Replace the old node with the middle node
 		// =========================================
