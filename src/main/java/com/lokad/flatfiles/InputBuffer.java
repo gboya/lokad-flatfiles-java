@@ -123,21 +123,21 @@ public final class InputBuffer
 			// be UTF-8, but a performance hit will be incurred because of the translation
 			// that takes place on every read. 
 
-			if (Bytes[0] == 0xFF && Bytes[1] == 0xFE)
+			if (Bytes[0] == (byte)0xFF && Bytes[1] == (byte)0xFE)
 			{
 				// little-endian UTF-16 encoding
 				input = new ReencodingStream(input, StandardCharsets.UTF_16LE);
 
 				setEnd(0);
 			}
-			else if (Bytes[0] == 0xFE && Bytes[1] == 0xFF)
+			else if (Bytes[0] == (byte)0xFE && Bytes[1] == (byte)0xFF)
 			{
 				// big-endian UTF-16 encoding
 				input = new ReencodingStream(input, StandardCharsets.UTF_16BE);
 
 				setEnd(0);
 			}
-			else if (Bytes[0] == 0xEF && Bytes[1] == 0xBB)
+			else if (Bytes[0] == (byte)0xEF && Bytes[1] == (byte)0xBB)
 			{
 				try {
 					setEnd(getEnd() + input.read(Bytes, 2, 1));
@@ -146,7 +146,7 @@ public final class InputBuffer
 				}
 
 				// Drop the UTF-8 BOM sequence "EF BB BF"
-				if (getEnd() == 3 && Bytes[2] == 0xBF)
+				if (getEnd() == 3 && Bytes[2] == (byte)0xBF)
 				{
 					setEnd(0);
 					FileEncoding = StandardCharsets.UTF_8;
