@@ -1,0 +1,5 @@
+﻿Id	LabelName	TagLabelCategory	TagSubcategory	ServiceLevel	LeadTime	StockOnHand	StockOnOrder	LotMultiplier
+1	Strawberry Candy canes 200g®®®®	ILS3002	ILS60	0.95	3	181	80	20
+2	Orange Stick Candy 100g	ILS3002	ILS40	0.95	3	400	200	20
+3	Lemon Saf-T-Pops 200g	ILS3002		0.95	3	222	200	20
+4	Lemon Caramel Squares 500g	ILS3002	ILS40	0.95	3	121	50	50
