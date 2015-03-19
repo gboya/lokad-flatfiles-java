@@ -244,7 +244,7 @@ public final class InputBuffer
 			// First, send any data remaining in the buffer.
 			if (_bufferEnd > _bufferStart)
 			{
-				byte length = (byte) Math.min(count, _bufferEnd - _bufferStart);
+				int length = Math.min(count, _bufferEnd - _bufferStart);
 				System.arraycopy(_buffer, _bufferStart, buffer, offset, length);
 				_bufferStart += length;
 				offset += length;
@@ -288,7 +288,7 @@ public final class InputBuffer
 				// Copy a portion to the output
 				// ============================
 
-				byte length =(byte) Math.min(count, _bufferEnd);
+				int length = Math.min(count, _bufferEnd);
 				System.arraycopy(_buffer, 0, buffer, offset, length);
 
 				_bufferStart = length;
