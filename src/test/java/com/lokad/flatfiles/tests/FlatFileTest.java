@@ -42,8 +42,19 @@ public class FlatFileTest {
 		RawFlatFile rff = new RawFlatFile(new DataInputStream(itemsInputStream));
 		RawFlatFileSerialization.Write(new DataOutputStream(outputStream), rff);		
 		
+		byte[] outputBytes = outputStream.toByteArray();
 		// Test output
-		assertArrayEquals(expectedBytes, outputStream.toByteArray());
+		try {
+			assertArrayEquals(expectedBytes, outputBytes);
+		} catch(AssertionError ae) {
+			// Find where it differs
+			for(int i = 0; i < Math.min(expectedBytes.length, outputBytes.length); i++) {
+				if(outputBytes[i] != expectedBytes[i]) {
+					System.out.println("Bytes arrays differ at index : " + i + ". Expecting : " + expectedBytes[i] + " but was : " + outputBytes[i]);
+				}
+			}
+			throw ae;
+		}
 	}
 	
 	@Parameters
