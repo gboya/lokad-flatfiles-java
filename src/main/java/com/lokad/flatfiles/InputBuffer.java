@@ -199,9 +199,17 @@ public final class InputBuffer
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			/*
+			 * The call to _source.read(...) yields -1 when we reach
+			 * End of Stream position (contrary to .NET semantics). We
+			 * have to check that case explicitly, and ensure that we
+			 * don't add -1 to End.
+			 */
+			if(count < 0) {
+				count = 0;
+				setAtEndOfStream(true);
+			}
 			setEnd(getEnd() + count);
-
-			setAtEndOfStream((count < 0));
 		}
 	}
 
