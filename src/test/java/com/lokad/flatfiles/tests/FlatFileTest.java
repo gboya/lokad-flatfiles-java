@@ -57,6 +57,27 @@ public class FlatFileTest {
 		}
 	}
 	
+	@Test
+	public void compareGeneratedRffWithDeserialized() throws Exception {
+		InputStream itemsInputStream = getClass().getResourceAsStream(sourceFile);
+		RawFlatFile expectedRff = new RawFlatFile(new DataInputStream(itemsInputStream));
+		
+		InputStream rffInputStream = getClass().getResourceAsStream(expectedOutputFile);
+		RawFlatFile deserializedRff = RawFlatFileSerialization.ReadRawFlatFile(new DataInputStream(rffInputStream));
+		
+		// Sanity check on deserialized RFF
+		deserializedRff.ThrowIfInconsistent();
+		
+		assertEquals(expectedRff.Columns, deserializedRff.Columns);
+		assertEquals(expectedRff.getLines(), deserializedRff.getLines());
+		
+		for(int i = 0; i < expectedRff.getContentLines(); i++) {
+			for(int k = 0; k < expectedRff.Columns; k++) {
+				assertArrayEquals(expectedRff.getItem(i, k), deserializedRff.getItem(i, k));
+			}
+		}
+	}
+	
 	@Parameters(name="{0}")
 	public static Collection<Object[]> testCases()
 	{
