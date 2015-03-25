@@ -57,7 +57,7 @@ public class FlatFileTest {
 		}
 	}
 	
-	@Parameters
+	@Parameters(name="{0}")
 	public static Collection<Object[]> testCases()
 	{
 		return Arrays.asList(new Object[][] {
