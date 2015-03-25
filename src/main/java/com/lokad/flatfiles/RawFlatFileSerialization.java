@@ -5,8 +5,13 @@ import it.unimi.dsi.fastutil.ints.IntListIterator;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.primitives.Shorts;
+import com.google.common.primitives.UnsignedBytes;
 
 
 public final class RawFlatFileSerialization
@@ -63,15 +68,16 @@ public final class RawFlatFileSerialization
 			throw new Exception(String.format("Unknown version number %1$s.", version));
 		}
 
+		byte b1 = reader.readByte();
+		byte b2 = reader.readByte();
+		// Shorts.fromBytes expect a Big-Endian order,
+		// but in .NET the BinaryWriter.Write(ushort) method
+		// and the BinaryReader.ReadUInt16 methods work with
+		// a little-endian order.
+		int columns = (int)Shorts.fromBytes(b2, b1);
 		
-		// ReadUInt16();
-		int c1 = reader.read();
-		int c2 = reader.read();
-		int columns = (c1 << 8) | c2;
-
-		
-		int cellCount = (int)reader.read();//ReadUInt32();
-		int contentCount = (int)reader.read(); //ReadUInt32();
+		int cellCount = readUInt32(reader);
+		int contentCount = readUInt32(reader);
 
 		java.util.ArrayList<Integer> cells = new java.util.ArrayList<Integer>(cellCount);
 		for (int i = 0; i < cellCount; ++i)
@@ -82,12 +88,23 @@ public final class RawFlatFileSerialization
 		List<byte[]> content = new ArrayList<byte[]>();
 		for (int i = 0; i < contentCount; ++i)
 		{
-			byte[] arr = new byte[ReadInt(reader)];
-			reader.read(arr, 0, ReadInt(reader));
+			int bytesToRead = ReadInt(reader);
+			byte[] arr = new byte[bytesToRead];
+			reader.read(arr, 0, bytesToRead);
 			content.add(i, arr);
 		}
 
 		return new RawFlatFile(columns, cells, content);
+	}
+	
+	/** Reads an (unsigned) 32-bit integer using Little-endian encoding.
+	 * **/
+	private static int readUInt32(DataInputStream reader) throws IOException {
+		byte[] b = new byte[4];
+		reader.read(b, 0, 4);
+		
+		ByteBuffer bb = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN);
+		return bb.getInt();
 	}
 
 	/**  Writes an integer using just enough bytes. 
@@ -128,7 +145,8 @@ public final class RawFlatFileSerialization
 
 		for (int offset = 0; b >= topBit; offset += 7)
 		{
-			b = reader.readByte();
+			
+			b = UnsignedBytes.toInt(reader.readByte());
 			i += (b % topBit) << offset;
 		}
 
