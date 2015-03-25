@@ -242,11 +242,11 @@ public final class Trie
 	*/
 	private int GetFirst(byte[] bytes, int pos)
 	{
-		int result = bytes[pos++];
+		int result = UnsignedBytes.toInt(bytes[pos++]);
 
 		for (int i = 1; i < 4 && pos < bytes.length; ++i)
 		{
-			result = result + (bytes[pos++] << (i * 8));
+			result = result + (UnsignedBytes.toInt(bytes[pos++]) << (i * 8));
 		}
 
 		return result;
