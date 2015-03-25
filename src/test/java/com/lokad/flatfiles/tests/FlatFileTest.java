@@ -68,6 +68,7 @@ public class FlatFileTest {
 				{"/Lokad_Items_UTF8_noquotes_small.tsv", "/Lokad_Items_UTF8_noquotes_small.rff"},
 				{"/Lokad_Items_UTF8_tiny.tsv", "/Lokad_Items_UTF8_tiny.rff"},
 				{"/No_EOL_at_EOF.tsv", "/No_EOL_at_EOF.rff"},
+				{"/Long_Prefix.tsv", "/Long_Prefix.rff"},
 		});
 	}
 
