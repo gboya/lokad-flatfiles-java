@@ -79,6 +79,7 @@ public final class RawFlatFileSerialization
 		int cellCount = readUInt32(reader);
 		int contentCount = readUInt32(reader);
 
+		// FIXME : Do not use an ArrayList to avoid boxing
 		java.util.ArrayList<Integer> cells = new java.util.ArrayList<Integer>(cellCount);
 		for (int i = 0; i < cellCount; ++i)
 		{
