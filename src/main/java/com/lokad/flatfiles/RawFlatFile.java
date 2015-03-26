@@ -162,10 +162,10 @@ public final class RawFlatFile
 	 * For performance reasons, <code>cells</code> and <code>content</code> are
 	 * not copied.
 	 */
-	public RawFlatFile(int columns, java.util.ArrayList<Integer> cells, List<byte[]> content)
+	public RawFlatFile(int columns, IntArrayList cells, List<byte[]> content)
 	{
 		Columns = columns;
-		_cells = new IntArrayList(cells);
+		_cells = cells;
 		Content = content;
 
 		// Use default values for diagnosis fields

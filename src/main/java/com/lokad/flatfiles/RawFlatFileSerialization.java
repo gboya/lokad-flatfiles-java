@@ -1,6 +1,7 @@
 package com.lokad.flatfiles;
 
 import it.unimi.dsi.fastutil.ints.IntListIterator;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -83,14 +84,13 @@ public final class RawFlatFileSerialization
 		int cellCount = readUInt32(reader);
 		int contentCount = readUInt32(reader);
 
-		// FIXME : Do not use an ArrayList to avoid boxing
-		java.util.ArrayList<Integer> cells = new java.util.ArrayList<Integer>(cellCount);
+		IntArrayList cells = new IntArrayList(cellCount);
 		for (int i = 0; i < cellCount; ++i)
 		{
 			cells.add(ReadInt(reader));
 		}
 
-		List<byte[]> content = new ArrayList<byte[]>();
+		List<byte[]> content = new ArrayList<byte[]>(contentCount);
 		for (int i = 0; i < contentCount; ++i)
 		{
 			int bytesToRead = ReadInt(reader);
