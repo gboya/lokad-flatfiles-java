@@ -218,7 +218,7 @@ public final class RawFlatFile
 		int nextNew = 1;
 		for (int i = 0; i < getCells().size(); ++i)
 		{
-			int cell = getCells().get(i);
+			int cell = getCells().getInt(i);
 
 			if (cell < 0)
 			{
