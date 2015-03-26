@@ -2,34 +2,33 @@ package com.lokad.flatfiles;
 
 import java.nio.charset.StandardCharsets;
 
-/** 
- Represents a cell in a TSV file; used for error reporting.
- 
- 
- Being part of the error reporting subsystem, this class is
- NOT optimized for performance.
- 
-*/
+/**
+ * Represents a cell in a TSV file; used for error reporting.
+ * 
+ * 
+ * Being part of the error reporting subsystem, this class is NOT optimized for
+ * performance.
+ */
 public final class TsvCell
 {
-	/** 
-	 The line on which the cell appears (zero-indexed).
-	*/
+	/**
+	 * The line on which the cell appears (zero-indexed).
+	 */
 	public int Line;
 
-	/** 
-	 The column on which the cell appears (zero-indexed).
-	*/
+	/**
+	 * The column on which the cell appears (zero-indexed).
+	 */
 	public int Column;
 
-	/** 
-	 If available, the name of the column. May be null.
-	*/
+	/**
+	 * If available, the name of the column. May be null.
+	 */
 	public String ColumnName;
 
-	/** 
-	 The contents of the cell, attempted as UTF8.
-	*/
+	/**
+	 * The contents of the cell, attempted as UTF8.
+	 */
 	public String Contents;
 
 
