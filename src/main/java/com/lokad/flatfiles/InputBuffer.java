@@ -7,28 +7,26 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 
-/** 
- Stores a buffer of bytes read from the provided stream. 
- 
- 
- Enables high-throughput operations on the data by reducing
- the frequency of context switches required to read more
- data from the stream. 
- 
-*/
+/**
+ * Stores a buffer of bytes read from the provided stream.
+ * 
+ * 
+ * Enables high-throughput operations on the data by reducing the frequency of
+ * context switches required to read more data from the stream.
+ */
 public final class InputBuffer
 {
-	/** 
-	 The bytes read from the stream. Only bytes between <see cref="Start"/>
-	 and <see cref="End"/> are valid.
-	*/
+	/**
+	 * The bytes read from the stream. Only bytes between {@link #Start} and
+	 * {@link #End} are valid.
+	 */
 	public byte[] Bytes;
 
-	/** 
-	 The index of the first valid byte inside <see cref="Bytes"/>.
-	 The user of this class is explicitly allowed to increment this value
-	 as more bytes are read.
-	*/
+	/**
+	 * The index of the first valid byte inside {@link #Bytes} The user of this
+	 * class is explicitly allowed to increment this value as more bytes are
+	 * read.
+	 */
 	private int Start;
 	public int getStart()
 	{
@@ -39,9 +37,9 @@ public final class InputBuffer
 		Start = value;
 	}
 
-	/** 
-	 The first invalid byte after <see cref="Start"/>.
-	*/
+	/**
+	 * The first invalid byte after {@link #Start}.
+	 */
 	private int End;
 	public int getEnd()
 	{
@@ -52,18 +50,18 @@ public final class InputBuffer
 		End = value;
 	}
 
-	/** 
-	 The number of valid bytes in <see cref="Bytes"/>.
-	*/
+	/**
+	 * The number of valid bytes in {@link #Bytes}.
+	 */
 	public int getLength()
 	{
 		return getEnd() - getStart();
 	}
 
-	/** 
-	 True if the end of the input stream was reached and <see cref="Refill"/>
-	 will not be able to read more bytes.
-	*/
+	/**
+	 * True if the end of the input stream was reached and {@link #Refill()}
+	 * will not be able to read more bytes.
+	 */
 	private boolean AtEndOfStream;
 	public boolean getAtEndOfStream()
 	{
@@ -74,29 +72,28 @@ public final class InputBuffer
 		AtEndOfStream = value;
 	}
 
-	/** 
-	 True if <see cref="Refill"/> has no effect, either because there is no
-	 more data left in the stream or because there is no room in the buffer.
-	*/
+	/**
+	 * True if {@link #Refill()} has no effect, either because there is no more
+	 * data left in the stream or because there is no room in the buffer.
+	 */
 	public boolean getIsFull()
 	{
 		return getLength() == Bytes.length || getAtEndOfStream();
 	}
 
-	/** 
-	 If a file encoding could be determined by reading the BOM (if any),
-	 then the found encoding is stored here.
-	 
-	 
-	 If set, then the buffer will always be encoded as UTF8 (this class
-	 takes care of decoding).
-	 
-	*/
+	/**
+	 * If a file encoding could be determined by reading the BOM (if any), then
+	 * the found encoding is stored here.
+	 * 
+	 * 
+	 * If set, then the buffer will always be encoded as UTF8 (this class takes
+	 * care of decoding).
+	 */
 	public Charset FileEncoding;
 
-	/** 
-	 The stream from which data will be read.
-	*/
+	/**
+	 * The stream from which data will be read.
+	 */
 	private InputStream _source;
 
 	public InputBuffer(int size, InputStream input)
@@ -159,11 +156,10 @@ public final class InputBuffer
 		Refill();
 	}
 
-	/** 
-	 Sets <see cref="Start"/> to 0, preserving both <see cref="Length"/>
-	 and the segment of <see cref="Bytes"/> between <see cref="Start"/>
-	 and <see cref="End"/>.
-	*/
+	/**
+	 * Sets {@link #Start} to 0, preserving both {@link #getLength()} and the
+	 * segment of {@link #Bytes} between {@link #Start} and {@link #End}.
+	 */
 	private void MoveDataToFront()
 	{
 		if (getStart() == 0)
@@ -183,10 +179,10 @@ public final class InputBuffer
 		setStart(0);
 	}
 
-	/** 
-	 Read enough data to fill the entire buffer, without
-	 discarding bytes between <see cref="Start"/> and <see cref="End"/>.
-	*/
+	/**
+	 * Read enough data to fill the entire buffer, without discarding bytes
+	 * between {@link #Start} and {@link #End}.
+	 */
 	public void Refill()
 	{
 		MoveDataToFront();
@@ -213,29 +209,33 @@ public final class InputBuffer
 		}
 	}
 
-	/** 
-	 A read-only stream used to convert from an UTF-16 text encoding to UTF-8.
-	 Does not support writing or seeking. 
-	*/
+	/**
+	 * A read-only stream used to convert from an UTF-16 text encoding to UTF-8.
+	 * Does not support writing or seeking.
+	 */
 	private final static class ReencodingStream extends InputStream
 	{
-		/**  The underlying stream from which data is read. 
-		*/
+		/**
+		 * The underlying stream from which data is read.
+		 */
 		private InputStream _stream;
 
-		/**  The number of bytes to be read on each iteration. 
-		*/
+		/**
+		 * The number of bytes to be read on each iteration.
+		 */
 		private static final int ReadSize = 4096;
 
-		/**  A buffer used for translation. 
-		*/
+		/**
+		 * A buffer used for translation.
+		 */
 		private final byte[] _buffer = new byte[2 * ReadSize];
 
 		private int _bufferEnd;
 		private int _bufferStart;
 
-		/**  The encoding from which data is read. 
-		*/
+		/**
+		 * The encoding from which data is read.
+		 */
 		private Charset _encoding;
 
 		public ReencodingStream(InputStream input, Charset source)
