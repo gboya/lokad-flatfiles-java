@@ -20,13 +20,14 @@ public final class RawFlatFileSerialization
 	private static final byte VersionNumber = 1;
 	
 	
-	/**  Writes a raw flat-file to the output. 
-	  
-	 Assumes that <see cref="RawFlatFile.ThrowIfInconsistent"/> does not 
-	 throw on <paramref name="rff"/>.
-	 * @throws IOException 
-	 
-	*/
+	/**
+	 * Writes a raw flat-file to the output.
+	 * 
+	 * Assumes that {@link RawFlatFile#ThrowIfInconsistent()} does not throw on
+	 * <code>rff</code>
+	 * 
+	 * @throws IOException
+	 */
 	public static void Write(DataOutputStream writer, RawFlatFile rff) throws IOException
 	{
 		
@@ -39,6 +40,8 @@ public final class RawFlatFileSerialization
 		writer.write(uInt32(rff.Content.size()));
 		
 		// Cell data: integer references to indices in 'content'
+		// Note : We use here the IntListIterator instead of a for(:) idiom
+		// because we would have boxing for all integer values.
 		IntListIterator iterator = rff.getCells().iterator();
 		while(iterator.hasNext()) {
 			WriteInt(writer, iterator.nextInt());
@@ -50,15 +53,16 @@ public final class RawFlatFileSerialization
 		{
 			WriteInt(writer, bytes.length);
 			writer.write(bytes);
-			
-			// withoud this BufferedOutputStream drop a few bytes
 			writer.flush();
 		}
 	}
 
-	/**  Reads a raw flat-file written by <see cref="Write"/>. 
-	 * @throws Exception 
-	*/
+	/**
+	 * Reads a raw flat-file written by
+	 * {@link #Write(DataOutputStream, RawFlatFile)}
+	 * 
+	 * @throws Exception
+	 */
 	public static RawFlatFile ReadRawFlatFile(DataInputStream reader) throws Exception
 	{
 		// Header: version & size information
@@ -98,8 +102,9 @@ public final class RawFlatFileSerialization
 		return new RawFlatFile(columns, cells, content);
 	}
 	
-	/** Reads an (unsigned) 32-bit integer using Little-endian encoding.
-	 * **/
+	/**
+	 * Reads an (unsigned) 32-bit integer using Little-endian encoding.
+	 */
 	private static int readUInt32(DataInputStream reader) throws IOException {
 		byte[] b = new byte[4];
 		reader.read(b, 0, 4);
@@ -108,20 +113,16 @@ public final class RawFlatFileSerialization
 		return bb.getInt();
 	}
 
-	/**  Writes an integer using just enough bytes. 
-	 
-	 Uses a single byte if 7 bits are enough. 
-	 Uses two bytes if 14 bytes are enough.
-	 Uses three bytes if 21 bytes are enough.
-	 Uses four bytes if 28 bytes are enough.
-	 Uses five bytes above that.
-	 
-	 <see cref="ReadInt"/>
-	 * @throws IOException 
-	*/
-	
-	
-	
+	/**
+	 * Writes an integer using just enough bytes.
+	 * 
+	 * Uses a single byte if 7 bits are enough. Uses two bytes if 14 bytes are
+	 * enough. Uses three bytes if 21 bytes are enough. Uses four bytes if 28
+	 * bytes are enough. Uses five bytes above that.
+	 * 
+	 * @see RawFlatFileSerialization#ReadInt(DataInputStream)
+	 * @throws IOException
+	 */
 	private static void WriteInt(DataOutputStream writer, int value) throws IOException
 	{
 		final int topBit = 1 << 7;
@@ -135,9 +136,11 @@ public final class RawFlatFileSerialization
 		writer.write(uByte((byte) value));
 	}
 
-	/**  Reads an integer written with <see cref="WriteInt"/>. 
-	 * @throws IOException 
-	*/
+	/**
+	 * Reads an integer written with {@link #WriteInt(DataOutputStream, int)}
+	 * 
+	 * @throws IOException
+	 */
 	private static int ReadInt(DataInputStream reader) throws IOException
 	{
 		final int topBit = 1 << 7;
