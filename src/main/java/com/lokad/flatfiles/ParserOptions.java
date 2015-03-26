@@ -1,15 +1,15 @@
 package com.lokad.flatfiles;
 
-/**  Options passed to the <see cref="RawFlatFile"/> parser. 
-*/
+/** Options passed to the {@link RawFlatFile} parser. */
 public final class ParserOptions
 {
 	private int _maxLineCount = Integer.MAX_VALUE;
 	private int _maxCellCount = Integer.MAX_VALUE;
 
-	/**  The maximum number of lines to be read from the input. 
-	  Does not include the header. 
-	*/
+	/**
+	 * The maximum number of lines to be read from the input. Does not include
+	 * the header.
+	 */
 	public int getMaxLineCount()
 	{
 		return _maxLineCount;
@@ -23,9 +23,10 @@ public final class ParserOptions
 		_maxLineCount = value;
 	}
 
-	/**  The maximum number of cells to be read from the input. 
-	  Does not include the header. 
-	*/
+	/**
+	 * The maximum number of cells to be read from the input. Does not include
+	 * the header.
+	 */
 	public int getMaxCellCount()
 	{
 		return _maxCellCount;
@@ -41,10 +42,11 @@ public final class ParserOptions
 
 	private int _readBufferSize = 100 * 1024 * 1024;
 
-	/** 
-	 The size of the buffer used for reading. Default is 100MB. If <see cref="MaxLineCount"/>
-	 is set, a recommended value is 2KB + 1KB per line.
-	*/
+	/**
+	 * The size of the buffer used for reading. Default is 100MB. If
+	 * {@link #getMaxLineCount()} is set, a recommended value is 2KB + 1KB per
+	 * line.
+	 */
 	public int getReadBufferSize()
 	{
 		return _readBufferSize;
