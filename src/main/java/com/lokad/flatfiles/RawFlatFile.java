@@ -10,82 +10,87 @@ import java.util.Collections;
 import java.util.List;
 
 
-/** 
- Reads a flat file into a compact in-memory representation.
-*/
+/**
+ * Reads a flat file into a compact in-memory representation.
+ */
 public final class RawFlatFile
 {
-	/** 
-	 The number of columns in this file.
-	*/
+	/**
+	 * The number of columns in this file.
+	 */
 	public int Columns;
 
-	/** 
-	 A matrix of cells. Line X, column Y can be found at index (X * Columns + Y).
-	 The actual contents of a cell are found in <see cref="Content"/>.
-	*/
+	/**
+	 * A matrix of cells. Line X, column Y can be found at index (X * Columns +
+	 * Y). The actual contents of a cell are found in {@link RawFlatFile#Content}
+	 */
 	public IntList getCells()
 	{
 		return IntLists.unmodifiable(_cells);
 	}
 
-	/** <see cref="Cells"/>
-	  Only mutable during parsing. 
-	*/
+	/**
+	 * Only mutable during parsing.
+	 * 
+	 * @see #getCells()
+	 */
 	private IntArrayList _cells = new IntArrayList();
 
-	/** 
-	 A list of non-empty cells that were beyond the last column on a line.
-	*/
+	/**
+	 * A list of non-empty cells that were beyond the last column on a line.
+	 */
 	public List<TsvCell> getUnexpectedCells()
 	{
 		return Collections.unmodifiableList(_unexpectedCells);
 	}
 
-	/** <see cref="UnexpectedCells"/>
-	  Only mutable during parsing. 
-	*/
+	/**
+	 * Only mutable during parsing.
+	 * 
+	 * @see #getUnexpectedCells()
+	 */
 	private final List<TsvCell> _unexpectedCells = new ArrayList<TsvCell>();
 
-	/** 
-	 The byte contents of the cells referenced by <see cref="Cells"/>.
-	*/
+	/**
+	 * The byte contents of the cells referenced by {@link #getCells()}
+	 */
 	protected List<byte[]> Content;
 
-	/** 
-	 The separator used for parsing the input file. 
-	*/
+	/**
+	 * The separator used for parsing the input file.
+	 */
 	public byte Separator;
 
-	/**  Was the file truncated ? 
-	  
-	 Occurs if <see cref="ParserOptions.MaxCellCount"/> or
-	 <see cref="ParserOptions.MaxLineCount"/> caused data to be discarded.
-	 
-	*/
+	/**
+	 * Was the file truncated ?
+	 * 
+	 * Occurs if {@link com.lokad.flatfiles.ParserOptions#getMaxCellCount()} or
+	 * {@link com.lokad.flatfiles.ParserOptions#getMaxLineCount()} caused data
+	 * to be discarded.
+	 */
 	public boolean IsTruncated;
 
-	/** 
-	 The encoding that was actually found in the file. Not all encodings can be
-	 detected by this class, so this value may be null.
-	 
-	 
-	 If a file encoding was detected, the <see cref="Content"/> cells will have 
-	 been re-encoded to UTF-8.
-	 
-	*/
+	/**
+	 * The encoding that was actually found in the file. Not all encodings can
+	 * be detected by this class, so this value may be null.
+	 * 
+	 * 
+	 * If a file encoding was detected, the {@link #Content} cells will
+	 * have been re-encoded to UTF-8.
+	 */
 	public Charset FileEncoding;
 
-	/**  The trie used to compute the int-to-byte[] mapping. 
-	  Only used during parsing, nulled afterwards. 
-	*/
+	/**
+	 * The trie used to compute the int-to-byte[] mapping. Only used during
+	 * parsing, nulled afterwards.
+	 */
 	private Trie _trie;
 
-	/** 
-	 Attempt to guess the separator by reading the first line of the buffer.
-	 
-	  Called during parsing only. 
-	*/
+	/**
+	 * Attempt to guess the separator by reading the first line of the buffer.
+	 * 
+	 * Called during parsing only.
+	 */
 	private static byte GuessSeparator(InputBuffer buffer, tangible.RefObject<Integer> columns)
 	{
 		final byte lf = 0x0A; // \n
@@ -148,17 +153,15 @@ public final class RawFlatFile
 		return 0x09;
 	}
 
-	/**  Create a raw flat file from external values. 
-	 
-	 
-	 No consistency checks are performed. 
-	 You may call <see cref="ThrowIfInconsistent"/> yourself.
-	 
-	 For performance reasons, <paramref name="cells"/> and <paramref name="content"/>
-	 are not copied.
-	 
-	 
-	*/
+	/**
+	 * Create a raw flat file from external values.
+	 * 
+	 * No consistency checks are performed. You may call
+	 * {@link #ThrowIfInconsistent()} yourself.
+	 * 
+	 * For performance reasons, <code>cells</code> and <code>content</code> are
+	 * not copied.
+	 */
 	public RawFlatFile(int columns, java.util.ArrayList<Integer> cells, List<byte[]> content)
 	{
 		Columns = columns;
@@ -172,19 +175,19 @@ public final class RawFlatFile
 		IsTruncated = false;
 	}
 
-	/**  Throws if the internal state is inconsistent.         
-	 
-	 The parsing constructor will never lead to an inconsistent state.
-	 Manually calling the <see cref="RawFlatFile(int, List{int}, IReadOnlyList{byte[]})"/>
-	 constructor, however, may cause inconsistency unless special care is taken
-	 to ensure the following invariants: 
-	 
-	  - all values in <see name="Cells"/> are valid indices into <see name="Content"/>
-	  - cell 0 in <see name="Content"/> is <c>new byte[0]</c>
-	  - length of <see name="Cells"/> is a multiple of <see name="Columns"/>
-	  - a value X > 0 may only appear in <see cref="Cells"/> at a higher index than value X-1.
-	 
-	*/
+	/**
+	 * Throws if the internal state is inconsistent.
+	 * 
+	 * The parsing constructor will never lead to an inconsistent state.
+	 * Manually calling the {@link #RawFlatFile(int, ArrayList, List)}
+	 * constructor, however, may cause inconsistency unless special care is
+	 * taken to ensure the following invariants:
+	 * 
+	 * - all values in {@link #_cells} are valid indices into {@link #Content} -
+	 * cell 0 in {@link #Content} is <code>new byte[0]</code> - length of
+	 * {@link #_cells} is a multiple of {@link #Columns} - a value X > 0 may
+	 * only appear in {@link #_cells} at a higher index than value X-1.
+	 */
 	public void ThrowIfInconsistent()
 	{
 		if (Content.get(0).length != 0)
@@ -238,14 +241,15 @@ public final class RawFlatFile
 		}
 	}
 
-	/**  Parses the input file with the provided options. 
-	*/
 
 	public RawFlatFile(InputStream file)
 	{
 		this(file, null);
 	}
 
+	/**
+	 * Parses the input file with the provided options.
+	 */
 	public RawFlatFile(InputStream file, ParserOptions options)
 	{
 		options = (options != null) ? options : new ParserOptions();
@@ -380,12 +384,12 @@ public final class RawFlatFile
 		_trie = null;
 	}
 
-	/** 
-	 Extracts a cell reference, inserts it into the cell matrix
-	 while keeping track of line sizes and end-of-lines.
-	 
-	  Called during parsing only. 
-	*/
+	/**
+	 * Extracts a cell reference, inserts it into the cell matrix while keeping
+	 * track of line sizes and end-of-lines.
+	 * 
+	 * Called during parsing only.
+	 */
 	private void ExtractCell(byte[] source, int start, int end, int nQuotes)
 	{
 
@@ -481,13 +485,12 @@ public final class RawFlatFile
 		}
 	}
 
-	/** 
-	 End the current line. If not all columns have values,
-	 adds empty cells to fill the line. If the line only contains
-	 empty cells, it is discarded.
-	 
-	  Called during parsing only. 
-	*/
+	/**
+	 * End the current line. If not all columns have values, adds empty cells to
+	 * fill the line. If the line only contains empty cells, it is discarded.
+	 * 
+	 * Called during parsing only.
+	 */
 	private void EndLine()
 	{
 		if (_lineSize > 0)
@@ -502,50 +505,55 @@ public final class RawFlatFile
 		_emptyCellsSinceLineStart = 0;
 	}
 
-	/** 
-	 The length of the *unbroken* empty cell streak since
-	 the last call to <see cref="EndLine"/> (or the start of processing).
-	 Zero if a non-empty cell was encountered.
-	 
-	  Used during parsing only. 
-	*/
+	/**
+	 * The length of the *unbroken* empty cell streak since the last call to
+	 * {@link #EndLine()} (or the start of processing). Zero if a non-empty cell
+	 * was encountered.
+	 * 
+	 * Used during parsing only.
+	 */
 	private int _emptyCellsSinceLineStart;
 
-	/** 
-	 The number of cells on the current line, assuming that there is at least
-	 one non-empty cell found so far.
-	 
-	  Used during parsing only. 
-	*/
+	/**
+	 * The number of cells on the current line, assuming that there is at least
+	 * one non-empty cell found so far.
+	 * 
+	 * Used during parsing only.
+	 */
 	private int _lineSize;
 
-	/**  The number of lines, including the header. 
-	*/
+	/**
+	 * The number of lines, including the header.
+	 */
 	public int getLines()
 	{
 		return Columns == 0 ? 0 : _cells.size() / Columns;
 	}
 
-	/**  The number of lines, not counting the header. 
-	*/
+	/**
+	 * The number of lines, not counting the header.
+	 */
 	public int getContentLines()
 	{
 		return Math.max(0, getLines() - 1);
 	}
 
-	/**  Returns the bytes in the specified cell. 
-	*/
+	/**
+	 * Returns the bytes in the specified cell.
+	 */
 	public byte[] getItem(int line, int column)
 	{
 		return Content.get(_cells.getInt(line * Columns + column));
 	}
 
-	/** 
-	 Were headers separated by whitespace (0x20) instead of <see cref="Separator"/> ? 
-	*/
+	/**
+	 * Were headers separated by whitespace (0x20) instead of {@link #Separator}
+	 * ?
+	 */
 	public boolean SpaceSeparatedHeaders;
 
-	/**  The maximum number of bytes allowed in a cell. 
-	*/
+	/**
+	 * The maximum number of bytes allowed in a cell.
+	 */
 	public static final int MaximalValueLength = 4096;
 }
